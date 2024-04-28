@@ -17,6 +17,7 @@ class LoginSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15)
     password = serializers.CharField(max_length=128, write_only=True)
 
+
     def validate(self, data):
         phone_number = data.get('phone_number')
         password = data.get('password')
