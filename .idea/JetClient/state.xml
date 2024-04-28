@@ -21,7 +21,7 @@
                 </list>
               </option>
               <option name="id" value="acbea8b1-5150-4257-a8da-94dc92337315" />
-              <option name="method" value="GET" />
+              <option name="method" value="POST" />
               <option name="name" value="/app/ML/yoga-recommendatoion" />
               <option name="url" value="http://localhost:8000/app/yoga-recommendations/" />
             </requestState>
