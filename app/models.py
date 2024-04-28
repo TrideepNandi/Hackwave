@@ -33,6 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Elder(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     medical_history = models.TextField()
+    age = models.PositiveIntegerField(default=60)
     emergency_contact = models.CharField(max_length=15)
 
 class FamilyMember(models.Model):
@@ -66,6 +67,7 @@ class SOS(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
+    location = models.
 
 class Exercise(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
