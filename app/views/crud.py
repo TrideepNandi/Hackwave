@@ -19,7 +19,26 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         if phone_number is not None:
             user = get_object_or_404(CustomUser, phone_number=phone_number)
             serializer = self.get_serializer(user)
-            return Response(serializer.data)
+            role_data = None
+            if user.role == 'elder':
+                role_data = Elder.objects.get(user=user.id)
+                role_serializer = ElderSerializer(role_data)
+            elif user.role == 'familymember':
+                role_data = FamilyMember.objects.get(user=user.id)
+                role_serializer = FamilyMemberSerializer(role_data)
+            elif user.role == 'volunteer':
+                role_data = Volunteer.objects.get(user=user.id)
+                role_serializer = VolunteerSerializer(role_data)
+            elif user.role == 'doctor':
+                role_data = Doctor.objects.get(user=user.id)
+                role_serializer = DoctorSerializer(role_data)
+            if role_data is not None:
+                return Response({
+                    'user': serializer.data,
+                    'role_data': role_serializer.data
+                })
+            else:
+                return Response(serializer.data)
         else:
             return Response({'error': 'A phone number must be provided'}, status=status.HTTP_400_BAD_REQUEST)
 
