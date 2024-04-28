@@ -12,7 +12,7 @@ class ElderAdmin(admin.ModelAdmin):
     display_emergency_contact.short_description = 'Emergency Contact'
 
 class FamilyMemberAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'relationship_to_elder', 'display_elders']
+    list_display = ['id', 'user', 'display_elders']
 
     def display_elders(self, obj):
         return ", ".join([elder.user.phone_number for elder in obj.elders.all()])

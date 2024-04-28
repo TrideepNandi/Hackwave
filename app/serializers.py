@@ -39,6 +39,8 @@ class ElderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FamilyMemberSerializer(serializers.ModelSerializer):
+    elders = serializers.PrimaryKeyRelatedField(many=True, queryset=Elder.objects.all())
+
     class Meta:
         model = FamilyMember
         fields = '__all__'
