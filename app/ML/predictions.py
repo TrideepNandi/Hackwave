@@ -1,9 +1,9 @@
 import joblib
 import numpy as np
 
-def load_recommendation_model(vectorizer_path='tfidf_vectorizer.pkl',
-                              matrix_path='tfidf_matrix.pkl',
-                              model_path='yoga_recommendation_model.pkl'):
+def load_recommendation_model(vectorizer_path='app/ML/tfidf_vectorizer.pkl',
+                              matrix_path='app/ML/tfidf_matrix.pkl',
+                              model_path='app/ML/yoga_recommendation_model.pkl'):
     # Load TF-IDF vectorizer
     tfidf_vectorizer = joblib.load(vectorizer_path)
 
@@ -28,6 +28,6 @@ def get_yoga_recommendations(user_diseases):
     recommendations = recommend_yoga_practices(user_diseases, vectorizer, matrix, model)
     return recommendations
 
-user_diseases = "high blood pressure"
-recommendations = get_yoga_recommendations(user_diseases)
-print("Recommended yoga practices:", recommendations)
+# user_diseases = "high blood pressure"
+# recommendations = get_yoga_recommendations(user_diseases)
+# print("Recommended yoga practices:", recommendations)
