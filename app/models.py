@@ -50,7 +50,7 @@ class Achievement(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     points_required = models.IntegerField()
-    badge = models.ImageField(upload_to='badges/')
+    badge = models.ImageField(upload_to='badges/', default='./image.jpg')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Call the "real" save() method.

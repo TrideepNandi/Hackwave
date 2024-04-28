@@ -7,7 +7,7 @@ import os
 
 
 class YogaRecommendationsView(APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         # Get the user's medical history
         elder_id = request.data.get('id')
         elder = Elder.objects.get(id=elder_id)
