@@ -18,8 +18,8 @@ class FamilyMemberAdmin(admin.ModelAdmin):
         return ", ".join([elder.user.phone_number for elder in obj.elders.all()])
     display_elders.short_description = 'Elders'
 
-class VolunteerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'badge_level', 'total_hours_volunteered']
+# class VolunteerAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'user', 'badge_level', 'total_hours_volunteered']
 
 class DoctorAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'specialty']
@@ -42,7 +42,7 @@ class RewardAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Elder, ElderAdmin)
 admin.site.register(FamilyMember, FamilyMemberAdmin)
-admin.site.register(Volunteer, VolunteerAdmin)
+# admin.site.register(Volunteer, VolunteerAdmin)
 admin.site.register(Doctor, DoctorAdmin)
 admin.site.register(Visit, VisitAdmin)
 admin.site.register(Medicine, MedicineAdmin)

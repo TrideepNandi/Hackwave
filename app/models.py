@@ -45,10 +45,29 @@ class FamilyMember(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     elders = models.ManyToManyField(Elder, related_name='family_members', blank=True)
 
+class Achievement(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    points = models.IntegerField()
+    progress = models.IntegerField()
+    badge = models.ImageField(upload_to='badges/')
+
+
+class VolunteerAchievement(models.Model):
+    volunteer = models.ForeignKey('Volunteer', on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    date_earned = models.DateTimeField(null=True, blank=True)
+    progress = models.IntegerField()
+    unlocked = models.BooleanField(default=False)
 class Volunteer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    badge_level = models.CharField(max_length=20)  # Bronze, Silver, Gold, Platinum, etc.
-    total_hours_volunteered = models.IntegerField()
+    badges = models.CharField(max_length=20)  # Bronze, Silver, Gold, Platinum, etc.
+    achievements = models.ManyToManyField(Achievement, through='VolunteerAchievement')
+    total_points = models.IntegerField()
+    skills = models.TextField(null=True, blank=True)  # Skills the volunteer has
+    interests = models.TextField(null=True, blank=True)  # Interests of the volunteer
+    availability = models.TextField(null=True, blank=True)  # When the volunteer is available
+    date_joined = models.DateField(auto_now_add=True)  # When the volunteer joined
 
 class Doctor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

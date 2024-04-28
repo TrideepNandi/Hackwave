@@ -29,7 +29,7 @@
 from pyfcm import FCMNotification
 
 def send_sos_ring(device_token):
-    push_service = FCMNotification(api_key="wVLYaJaKQOdXrzslTh7DMAkvR0DLbFeXpB0mFnEbmCA")
+    push_service = FCMNotification(api_key="AAAA-N0VBwc:APA91bETlr8giC9S2mEw09zfzib1jdxAkICdPyQWj7XISCz_N-fkpuzf3dIrU5UtGKas2HQqGzYmFAJpfueTKOSyZaFEQbjyjrtT524-UOEiOygJuXyhrcF9CYBrZ8Ybnb33TtTInlZu")
 
     message_title = "SOS Alert"
     message_body = "An elder has sent an SOS alert. Please check the app for details."
