@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, Reward
+from .models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone_number', 'role', 'address', 'is_active', 'is_staff']
@@ -36,8 +36,8 @@ class SOSAdmin(admin.ModelAdmin):
 class ExerciseAdmin(admin.ModelAdmin):
     list_display = ['id', 'elder', 'recommendation', 'frequency']
 
-class RewardAdmin(admin.ModelAdmin):
-    list_display = ['id', 'volunteer', 'badge', 'date_awarded']
+# class RewardAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'volunteer', 'badge', 'date_awarded']
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Elder, ElderAdmin)
@@ -48,4 +48,4 @@ admin.site.register(Visit, VisitAdmin)
 admin.site.register(Medicine, MedicineAdmin)
 admin.site.register(SOS, SOSAdmin)
 admin.site.register(Exercise, ExerciseAdmin)
-admin.site.register(Reward, RewardAdmin)
+# admin.site.register(Reward, RewardAdmin)

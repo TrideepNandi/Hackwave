@@ -2,8 +2,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, Reward
-from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer, RewardSerializer
+from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise
+from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer
 from app.firebasemanager import send_sos_ring
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
@@ -24,7 +24,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
                 if user.role == 'elder':
                     role_data = Elder.objects.get(user=user.id)
                     role_serializer = ElderSerializer(role_data)
-                elif user.role == 'familymember':
+                elif user.role == 'family_member':
                     role_data = FamilyMember.objects.get(user=user.id)
                     role_serializer = FamilyMemberSerializer(role_data)
                 elif user.role == 'volunteer':
@@ -98,6 +98,6 @@ class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
 
-class RewardViewSet(viewsets.ModelViewSet):
-    queryset = Reward.objects.all()
-    serializer_class = RewardSerializer
+# class RewardViewSet(viewsets.ModelViewSet):
+#     queryset = Reward.objects.all()
+#     serializer_class = RewardSerializer
