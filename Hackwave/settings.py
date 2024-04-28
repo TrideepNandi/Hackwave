@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     'rest_framework.authtoken',
+    'corsheaders',
     "app",
     
 ]
@@ -51,7 +52,20 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+
 ]
+
+#Whitelisting React Port
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8081'
+)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",  # Example: React development server
+]
+CORS_ALLOW_ALL_ORIGINS = True
+# Internationalization
+# https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 ROOT_URLCONF = "Hackwave.urls"
 
