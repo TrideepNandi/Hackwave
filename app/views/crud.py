@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound
 from pyfcm import FCMNotification
-
+from datetime import timezone
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -70,6 +70,28 @@ class VisitViewSet(viewsets.ModelViewSet):
 class MedicineViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        # Get the elder who is supposed to take the medicine
+        elder = Elder.objects.get(id=serializer.data['elder'])
+
+        # Prepare the data message
+        data_message = {
+            "title": "Medicine Reminder",
+            "body": f"It's time to take your {serializer.data['name']}. Dosage: {serializer.data['dosage']}"
+        }
+
+        # Send the reminder notification if it's the reminder time
+        if timezone.localtime(timezone.now()).time() == serializer.data['reminder_time']:
+            push_service = FCMNotification(api_key="AAAA-N0VBwc:APA91bETlr8giC9S2mEw09zfzib1jdxAkICdPyQWj7XISCz_N-fkpuzf3dIrU5UtGKas2HQqGzYmFAJpfueTKOSyZaFEQbjyjrtT524-UOEiOygJuXyhrcF9CYBrZ8Ybnb33TtTInlZu")
+            result = push_service.notify_single_device(registration_id=elder.user.device_token, data_message=data_message)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response({"result": result, "medicine_data" : serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
 
 class SOSViewSet(viewsets.ModelViewSet):
     queryset = SOS.objects.all()
