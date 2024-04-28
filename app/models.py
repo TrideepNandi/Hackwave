@@ -51,6 +51,18 @@ class Achievement(models.Model):
     points_required = models.IntegerField()
     badge = models.ImageField(upload_to='badges/')
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+
+        # After the achievement is saved, create a VolunteerAchievement for each volunteer.
+        for volunteer in Volunteer.objects.all():
+            VolunteerAchievement.objects.create(
+                volunteer=volunteer,
+                achievement=self,
+                progress=0,
+                unlocked=False
+            )
+
 
 class VolunteerAchievement(models.Model):
     volunteer = models.ForeignKey('Volunteer', on_delete=models.CASCADE)
@@ -84,6 +96,25 @@ class Visit(models.Model):
     visit_date = models.DateTimeField()
     visit_report = models.TextField()
     photos = models.ImageField(upload_to='visit_photos/')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        self.increment_achievement()  # Call the new method.
+
+    def increment_achievement(self):
+        # Get the "Visited Elders" achievement.
+        visited_elders_achievement = Achievement.objects.get(name='Visited Elders')
+
+        # Get or create a VolunteerAchievement for the volunteer and the achievement.
+        volunteer_achievement, created = VolunteerAchievement.objects.get_or_create(
+            volunteer=self.volunteer,
+            achievement=visited_elders_achievement,
+            defaults={'progress': 0}
+        )
+
+        # Increment the progress and save the VolunteerAchievement.
+        volunteer_achievement.progress += 1
+        volunteer_achievement.save()
 
 class Medicine(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
