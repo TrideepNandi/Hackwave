@@ -97,7 +97,9 @@ class SOSViewSet(viewsets.ModelViewSet):
         # Prepare the data message
         data_message = {
             "title": "SOS Alert",
-            "body": "I need help"
+            "body": serializer.data['message'],
+            "latitude": serializer.data['latitude'],
+            "longitude": serializer.data['longitude'],
         }
 
         # Send an SOS ring to each family member and volunteer
