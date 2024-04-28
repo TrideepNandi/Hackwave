@@ -22,6 +22,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, default="Default_First_Name")
     last_name = models.CharField(max_length=255, default="Default_Last_Name")
     gender = models.CharField(max_length=255, default="Default_Gender")
+    device_token = models.CharField(max_length=255, blank=True, null=True)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -37,7 +39,7 @@ class Elder(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     medical_history = models.TextField()
     age = models.PositiveIntegerField(default=60)
-    emergency_contact = models.CharField(max_length=15)
+    emergency_contact = models.CharField(null=True, blank= True, max_length=15)
 
 class FamilyMember(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -70,8 +72,8 @@ class SOS(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)    
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, default="0")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, default="0")    
 class Exercise(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     recommendation = models.TextField()
