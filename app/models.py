@@ -70,8 +70,8 @@ class SOS(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
-    # location = models.
-
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)    
 class Exercise(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     recommendation = models.TextField()

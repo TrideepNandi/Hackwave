@@ -1,5 +1,7 @@
 # views.crud.py
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
 from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, Reward
 from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer, RewardSerializer
 
@@ -34,6 +36,27 @@ class MedicineViewSet(viewsets.ModelViewSet):
 class SOSViewSet(viewsets.ModelViewSet):
     queryset = SOS.objects.all()
     serializer_class = SOSSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        # Get the elder who sent the SOS
+        elder = serializer.instance.elder
+
+        # Get the family members and volunteers associated with the elder
+        family_members = FamilyMember.objects.filter(elder=elder)
+        volunteers = Volunteer.objects.filter(elder=elder)
+
+        # Send an SOS ring to each family member and volunteer
+        # for family_member in family_members:
+        #     send_sos_ring(family_member.user.phone_number)
+        # for volunteer in volunteers:
+        #     # send_sos_ring(volunteer.user.phone_number)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
