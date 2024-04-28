@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from datetime import datetime
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
@@ -44,7 +45,7 @@ class Elder(models.Model):
 class FamilyMember(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     elders = models.ManyToManyField(Elder, related_name='family_members', blank=True)
-
+    
 class Achievement(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -81,7 +82,7 @@ class Volunteer(models.Model):
     skills = models.TextField(null=True, blank=True)  # Skills the volunteer has
     interests = models.TextField(null=True, blank=True)  # Interests of the volunteer
     availability = models.TextField(null=True, blank=True)  # When the volunteer is available
-    date_joined = models.DateField(auto_now_add=True)  # When the volunteer joined
+    # date_joined = models.DateField(auto_now=True, default=datetime.now())  # When the volunteer joined
     badges = models.CharField(max_length=20)  # Bronze, Silver, Gold, Platinum, etc.
     achievements = models.ManyToManyField(Achievement, through='VolunteerAchievement')
     total_points = models.IntegerField()
@@ -121,13 +122,16 @@ class Medicine(models.Model):
     name = models.CharField(max_length=100)
     dosage = models.CharField(max_length=50)
     reminder_time = models.TimeField()
+    comments = models.CharField(max_length=255, blank=True, null=True)
 
 class SOS(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, default="0")
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, default="0")    
+    latitude = models.CharField(max_length=255, blank=True, null=True)
+    longitude = models.CharField(max_length=255, blank=True, null=True)
+
+  
 class Exercise(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     recommendation = models.TextField()
