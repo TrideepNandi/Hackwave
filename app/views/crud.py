@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import NotFound
 from pyfcm import FCMNotification
 from datetime import timezone
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from app.tasks import send_reminder
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -71,27 +73,31 @@ class MedicineViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+class MedicineViewSet(viewsets.ModelViewSet):
+    queryset = Medicine.objects.all()
+    serializer_class = MedicineSerializer
+
+    def perform_create(self, serializer):
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        medicine = serializer.save()
 
-        # Get the elder who is supposed to take the medicine
-        elder = Elder.objects.get(id=serializer.data['elder'])
+        # Get the reminder time
+        reminder_time = medicine.reminder_time
 
-        # Prepare the data message
-        data_message = {
-            "title": "Medicine Reminder",
-            "body": f"It's time to take your {serializer.data['name']}. Dosage: {serializer.data['dosage']}"
-        }
+        # Create a crontab schedule that runs at the reminder time every day
+        schedule, created = CrontabSchedule.objects.get_or_create(
+            minute=reminder_time.minute, 
+            hour=reminder_time.hour, 
+            day_of_week='*', 
+            day_of_month='*', 
+            month_of_year='*'
+        )
 
-        # Send the reminder notification if it's the reminder time
-        if timezone.localtime(timezone.now()).time() == serializer.data['reminder_time']:
-            push_service = FCMNotification(api_key="AAAA-N0VBwc:APA91bETlr8giC9S2mEw09zfzib1jdxAkICdPyQWj7XISCz_N-fkpuzf3dIrU5UtGKas2HQqGzYmFAJpfueTKOSyZaFEQbjyjrtT524-UOEiOygJuXyhrcF9CYBrZ8Ybnb33TtTInlZu")
-            result = push_service.notify_single_device(registration_id=elder.user.device_token, data_message=data_message)
+        # Create a periodic task that uses this schedule
+        PeriodicTask.objects.create(crontab=schedule, task='myapp.tasks.send_reminder', args=[medicine.id])
 
         headers = self.get_success_headers(serializer.data)
-        return Response({"result": result, "medicine_data" : serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({"medicine_data" : serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
 
 class SOSViewSet(viewsets.ModelViewSet):
     queryset = SOS.objects.all()
