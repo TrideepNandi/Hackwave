@@ -27,8 +27,14 @@ class LoginView(APIView):
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
             password = serializer.validated_data['password']
+            device_token = serializer.validated_data.get('device_token', None)  # Get the device_token from the request
             user = authenticate(phone_number=phone_number, password=password)
             if user is not None:
+                # Update the device_token if it is provided in the request
+                if device_token is not None:
+                    user.device_token = device_token
+                    user.save()
+                    
                 token, created = Token.objects.get_or_create(user=user)
                 user_serializer = CustomUserSerializer(user)  # Serialize the CustomUser instance
                 if user.role == 'elder':
