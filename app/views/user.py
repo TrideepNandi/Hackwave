@@ -16,7 +16,7 @@ class SignupView(APIView):
             token, created = Token.objects.get_or_create(user=user)
 
             if user:
-                return Response({'token': token.key, 'user': str(user.role), 'user_data': serializer.data}, status=status.HTTP_201_CREATED)        
+                return Response({'message': "User Created Successfully", 'token': token.key, 'user': str(user.role), 'user_data': serializer.data}, status=status.HTTP_201_CREATED)        
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
