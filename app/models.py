@@ -19,6 +19,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, unique=True)
     role = models.CharField(max_length=20)  # Admin, Elder, Family Member, Volunteer, Doctor
     address = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, default="Default_First_Name")
+    last_name = models.CharField(max_length=255, default="Default_Last_Name")
+    gender = models.CharField(max_length=255, default="Default_Gender")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
