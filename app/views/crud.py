@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, Reward
 from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer, RewardSerializer
+from app.firebasemanager import send_sos_ring
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -51,10 +52,10 @@ class SOSViewSet(viewsets.ModelViewSet):
         volunteers = Volunteer.objects.filter(elder=elder)
 
         # Send an SOS ring to each family member and volunteer
-        # for family_member in family_members:
-        #     send_sos_ring(family_member.user.phone_number)
-        # for volunteer in volunteers:
-        #     # send_sos_ring(volunteer.user.phone_number)
+        for family_member in family_members:
+            send_sos_ring(family_member.user.device_token)
+        for volunteer in volunteers:
+            send_sos_ring(volunteer.user.device_token)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
