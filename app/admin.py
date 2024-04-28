@@ -5,11 +5,18 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'phone_number', 'role', 'address', 'is_active', 'is_staff']
 
 class ElderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'medical_history', 'emergency_contact']
-    # list_display = all
+    list_display = ['id', 'user', 'medical_history', 'display_emergency_contact']
+
+    def display_emergency_contact(self, obj):
+        return ", ".join([family_member.user.phone_number for family_member in obj.emergency_contact.all()])
+    display_emergency_contact.short_description = 'Emergency Contact'
 
 class FamilyMemberAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'elder', 'relationship_to_elder']
+    list_display = ['id', 'user', 'relationship_to_elder', 'display_elders']
+
+    def display_elders(self, obj):
+        return ", ".join([elder.user.phone_number for elder in obj.elders.all()])
+    display_elders.short_description = 'Elders'
 
 class VolunteerAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'badge_level', 'total_hours_volunteered']

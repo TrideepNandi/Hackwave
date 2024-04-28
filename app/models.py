@@ -39,11 +39,11 @@ class Elder(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     medical_history = models.TextField()
     age = models.PositiveIntegerField(default=60)
-    emergency_contact = models.CharField(null=True, blank= True, max_length=15)
+    emergency_contact = models.ManyToManyField('FamilyMember', related_name='elders')
 
 class FamilyMember(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
+    # elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     relationship_to_elder = models.CharField(max_length=50)
 
 class Volunteer(models.Model):
