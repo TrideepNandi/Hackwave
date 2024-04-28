@@ -67,7 +67,7 @@ class SOS(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
-    location = models.
+    # location = models.
 
 class Exercise(models.Model):
     elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
