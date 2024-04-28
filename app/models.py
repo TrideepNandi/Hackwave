@@ -44,7 +44,6 @@ class Elder(models.Model):
 class FamilyMember(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     elders = models.ManyToManyField(Elder, related_name='family_members', blank=True)
-    # relationship_to_elder = models.CharField(max_length=50)
 
 class Volunteer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

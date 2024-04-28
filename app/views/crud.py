@@ -5,10 +5,23 @@ from rest_framework import status
 from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, Reward
 from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer, RewardSerializer
 from app.firebasemanager import send_sos_ring
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
+    @action(detail=False, methods=['post'])
+    def by_phone_number(self, request):
+        phone_number = request.data.get('phone_number', None)
+        if phone_number is not None:
+            user = get_object_or_404(CustomUser, phone_number=phone_number)
+            serializer = self.get_serializer(user)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'A phone number must be provided'}, status=status.HTTP_400_BAD_REQUEST)
 
 class ElderViewSet(viewsets.ModelViewSet):
     queryset = Elder.objects.all()
