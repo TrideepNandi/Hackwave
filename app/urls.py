@@ -2,6 +2,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from app.views import user, crud
+from app.views.get_yoga_recomm import YogaRecommendationsView
+
 router = DefaultRouter()
 router.register('user', crud.CustomUserViewSet)
 router.register('elder', crud.ElderViewSet)
@@ -17,5 +19,6 @@ router.register('reward', crud.RewardViewSet)
 urlpatterns = [
     path('user/signup/', user.SignupView.as_view(), name='signup'),
     path('user/login/', user.LoginView.as_view(), name='login'),
+    path('yoga-recommendations/<str:user_diseases>/', YogaRecommendationsView.as_view(), name='yoga-recommendations'),
     path('', include(router.urls)),
 ]
