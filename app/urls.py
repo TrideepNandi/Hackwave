@@ -19,6 +19,6 @@ router.register('reward', crud.RewardViewSet)
 urlpatterns = [
     path('user/signup/', user.SignupView.as_view(), name='signup'),
     path('user/login/', user.LoginView.as_view(), name='login'),
-    path('yoga-recommendations/<str:user_diseases>/', YogaRecommendationsView.as_view(), name='yoga-recommendations'),
+    path('yoga-recommendations/', YogaRecommendationsView.as_view(), name='yoga-recommendations'),
     path('', include(router.urls)),
 ]
