@@ -11,4 +11,5 @@ def send_reminder(medicine_id):
         "body": f"It's time to take your {medicine.name}. Dosage: {medicine.dosage}"
     }
     result = push_service.notify_single_device(registration_id=medicine.elder.user.device_token, data_message=data_message)
+    print(result)
     return result

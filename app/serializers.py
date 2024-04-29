@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Elder, FamilyMember, Volunteer, Achievement, VolunteerAchievement, Doctor, Visit, Medicine, SOS, Exercise
+from .models import CustomUser, Elder, FamilyMember, Volunteer, Achievement, VolunteerAchievement, Doctor, Visit, Medicine, SOS, Exercise, LiveLocation
 from django.contrib.auth import authenticate
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -85,5 +85,10 @@ class ExerciseSerializer(serializers.ModelSerializer):
         model = Exercise
         fields = '__all__'
 
+
+class LiveLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LiveLocation
+        fields = '__all__'
 
 

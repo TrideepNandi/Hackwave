@@ -141,3 +141,9 @@ class Exercise(models.Model):
 #     volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
 #     badge = models.CharField(max_length=50)  # Bronze, Silver, Gold, Platinum, etc.
 #     date_awarded = models.DateTimeField(auto_now_add=True)
+
+
+class LiveLocation(models.Model):
+    elder = models.ForeignKey(Elder, on_delete=models.CASCADE)
+    latitude = models.CharField(max_length=255, blank=True, null=True)
+    longitude = models.CharField(max_length=255, blank=True, null=True)

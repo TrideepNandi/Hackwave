@@ -2,8 +2,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise
-from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer
+from app.models import CustomUser, Elder, FamilyMember, Volunteer, Doctor, Visit, Medicine, SOS, Exercise, LiveLocation
+from app.serializers import CustomUserSerializer, ElderSerializer, FamilyMemberSerializer, VolunteerSerializer, DoctorSerializer, VisitSerializer, MedicineSerializer, SOSSerializer, ExerciseSerializer, LiveLocationSerializer
 from app.firebasemanager import send_sos_ring
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
@@ -12,6 +12,7 @@ from pyfcm import FCMNotification
 from datetime import timezone
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from app.tasks import send_reminder
+import json
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -93,11 +94,27 @@ class MedicineViewSet(viewsets.ModelViewSet):
             month_of_year='*'
         )
 
-        # Create a periodic task that uses this schedule
-        PeriodicTask.objects.create(crontab=schedule, task='myapp.tasks.send_reminder', args=[medicine.id])
+        # Create a unique task name
+        task_name = f"send_reminder_{medicine.id}"
+
+        # Try to get the existing task
+        try:
+            task = PeriodicTask.objects.get(name=task_name)
+            # If the task exists, update its schedule
+            task.crontab = schedule
+            task.save()
+        except PeriodicTask.DoesNotExist:
+            # If the task doesn't exist, create a new one
+            PeriodicTask.objects.create(
+                crontab=schedule, 
+                name=task_name, 
+                task='app.tasks.send_reminder', 
+                args=json.dumps([medicine.id])
+            )
 
         headers = self.get_success_headers(serializer.data)
         return Response({"medicine_data" : serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
+    
 
 class SOSViewSet(viewsets.ModelViewSet):
     queryset = SOS.objects.all()
@@ -155,6 +172,21 @@ class SOSViewSet(viewsets.ModelViewSet):
 class ExerciseViewSet(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
+
+class LiveLocationViewSet(viewsets.ModelViewSet):
+    serializer_class = LiveLocationSerializer
+    queryset = LiveLocation.objects.all()  # Default queryset
+
+    def get_queryset(self):
+        # Get the current user
+        family_member = self.request.data.get("family_member")
+
+        # Get all the elders associated with the current user
+        elders = Elder.objects.filter(family_members__user=family_member)
+        # Get the live locations of these elders
+        queryset = LiveLocation.objects.filter(elder__in=elders)
+
+        return queryset
 
 # class RewardViewSet(viewsets.ModelViewSet):
 #     queryset = Reward.objects.all()
