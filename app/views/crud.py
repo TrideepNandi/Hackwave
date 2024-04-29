@@ -177,16 +177,23 @@ class LiveLocationViewSet(viewsets.ModelViewSet):
     serializer_class = LiveLocationSerializer
     queryset = LiveLocation.objects.all()  # Default queryset
 
-    def get_queryset(self):
-        # Get the current user
-        family_member = self.request.data.get("family_member")
+def get_queryset(self):
+    # Get the family_member id from the request
+    family_member_id = self.request.data.get("family_member")
+    print(family_member_id)
 
-        # Get all the elders associated with the current user
-        elders = Elder.objects.filter(family_members__user=family_member)
-        # Get the live locations of these elders
-        queryset = LiveLocation.objects.filter(elder__in=elders)
+    # Get the FamilyMember object
+    family_member = FamilyMember.objects.get(id=family_member_id)
+    print(family_member)
 
-        return queryset
+    # Get all the elders associated with the family_member
+    elders = family_member.elders.all()  # Change this line
+    print(elders)
+
+    # Get the live locations of these elders
+    queryset = LiveLocation.objects.filter(elder__in=elders)
+
+    return queryset
 
 # class RewardViewSet(viewsets.ModelViewSet):
 #     queryset = Reward.objects.all()
