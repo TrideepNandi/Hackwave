@@ -150,18 +150,18 @@ class SOSViewSet(viewsets.ModelViewSet):
         # Send an SOS ring to each family member and volunteer
 
         # Send the SOS ring to all devices
-        push_service = FCMNotification(api_key="YOUR_SERVER_KEY")
+        push_service = FCMNotification(api_key="AAAA-N0VBwc:APA91bETlr8giC9S2mEw09zfzib1jdxAkICdPyQWj7XISCz_N-fkpuzf3dIrU5UtGKas2HQqGzYmFAJpfueTKOSyZaFEQbjyjrtT524-UOEiOygJuXyhrcF9CYBrZ8Ybnb33TtTInlZu")
         result = push_service.multiple_devices_data_message(registration_ids=device_tokens, data_message=data_message)
 
-        token = "eEB6IeaYSdCYq8VgNrh-n1:APA91bHIVmTqLzKjo7vfTdtzelayOFGGFgsdV8PafLYnvm4E5MeF61pa37Gybn4rtg2LkiS1KusbBXmMCUChsQlQ1paxkFRvK0sIemuulxRujdm6Vt6Pz8j5BVPEOK8E0llhdGBPOQw1"
+        token = "eqlPrAHATiaAXmtM7hbhDK:APA91bHTDoiZAHVMYFg_z1Xy8oT6BNW7t4FR774bzom7VgLfvtVb9JuQf9LTSjajlCkYBykaqpDbbC_5EDO7__kt71hAdviIiCGYnBBFBKoWSa14RfDjrBwhZ7vDJt870ahxDC4S_aW5"
         message_title = "SOS Alert"
         message_body = "I need help"
-        # result = send_sos_ring(token, message_title=message_title, message_body=message_body)
+        result = send_sos_ring(token, message_title=message_title, message_body=message_body)
 
-        for family_member in family_members:
-            send_sos_ring(family_member.user.device_token, message_title=message_title, message_body=message_body)
-        for volunteer in volunteers:
-            send_sos_ring(volunteer.user.device_token, message_title=message_title, message_body=message_body)
+        # for family_member in family_members:
+        #     send_sos_ring(family_member.user.device_token, message_title=message_title, message_body=message_body)
+        # for volunteer in volunteers:
+        #     send_sos_ring(volunteer.user.device_token, message_title=message_title, message_body=message_body)
 
         headers = self.get_success_headers(serializer.data)
         return Response({"result of notification": result, "data": serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
