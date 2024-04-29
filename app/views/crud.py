@@ -179,7 +179,7 @@ class LiveLocationViewSet(viewsets.ModelViewSet):
 
 def get_queryset(self):
     # Get the family_member id from the request
-    family_member_id = self.request.data.get("family_member")
+    family_member_id = self.request.query_params.get("family_member")
     print(family_member_id)
 
     # Get the FamilyMember object
