@@ -153,7 +153,8 @@ class SOSViewSet(viewsets.ModelViewSet):
         push_service = FCMNotification(api_key="AAAA-N0VBwc:APA91bETlr8giC9S2mEw09zfzib1jdxAkICdPyQWj7XISCz_N-fkpuzf3dIrU5UtGKas2HQqGzYmFAJpfueTKOSyZaFEQbjyjrtT524-UOEiOygJuXyhrcF9CYBrZ8Ybnb33TtTInlZu")
         result = push_service.multiple_devices_data_message(registration_ids=device_tokens, data_message=data_message)
 
-        token = "eqlPrAHATiaAXmtM7hbhDK:APA91bHTDoiZAHVMYFg_z1Xy8oT6BNW7t4FR774bzom7VgLfvtVb9JuQf9LTSjajlCkYBykaqpDbbC_5EDO7__kt71hAdviIiCGYnBBFBKoWSa14RfDjrBwhZ7vDJt870ahxDC4S_aW5"
+        # token = "eqlPrAHATiaAXmtM7hbhDK:APA91bHTDoiZAHVMYFg_z1Xy8oT6BNW7t4FR774bzom7VgLfvtVb9JuQf9LTSjajlCkYBykaqpDbbC_5EDO7__kt71hAdviIiCGYnBBFBKoWSa14RfDjrBwhZ7vDJt870ahxDC4S_aW5"
+        token = "frAd-a4wQGuwpdr5txw6Ci:APA91bGOO7DIsWowFie2VGK2E71OwGzWIR_PT9o-LxdhKizjs2YxChkK1MWkI68FsAEiFg8UrpyUahU_VoetuPZwndEhYOZ4tc-aW6sHQhKZjZE4ub5exEn7R-DAN8nVZXxosh6--SSs"
         message_title = "SOS Alert"
         message_body = "I need help"
         result = send_sos_ring(token, message_title=message_title, message_body=message_body)
